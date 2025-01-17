@@ -3,94 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Аиенда навыков</title>
+    <title>Skill Exchange</title>
     <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #5EC8A5;
+            --background-color: #F5F7FA;
+            --text-color: #333333;
+            --button-hover: #45a049;
+            --border-radius: 12px;
+            --input-background: #FFFFFF;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
         body {
+            margin: 0;
             font-family: Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
             text-align: center;
-            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
+
+        header {
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .container {
+            background: var(--input-background);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 10px var(--shadow-color);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid var(--shadow-color);
+            border-radius: var(--border-radius);
+            background: var(--input-background);
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
         .button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            margin: 10px;
-            background-color: #4CAF50;
+            background: var(--primary-color);
             color: white;
+            padding: 12px 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
         }
+
         .button:hover {
-            background-color: #45a049;
+            background: var(--button-hover);
         }
-        .content {
+
+        footer {
+            margin-top: 20px;
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            background: var(--input-background);
+            padding: 10px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 10px var(--shadow-color);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .footer-nav button {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .footer-nav button:hover {
+            color: var(--button-hover);
+        }
+
+        .hidden {
             display: none;
         }
+
         .visible {
             display: block;
         }
     </style>
 </head>
 <body>
+    <header>
+        <h1>Skill Exchange</h1>
+    </header>
 
-    <h1>Аиенда навыков</h1>
-
-    <div id="start" class="content visible">
-        <p>Привет! Давайте начнем с регистрации ваших навыков и потребностей. Вы готовы?</p>
-        <button class="button" id="registerSkills">Да, готов!</button>
+    <div class="container" id="start">
+        <p>Welcome! Ready to register your skills and needs?</p>
+        <button class="button" id="startButton">Get Started</button>
     </div>
 
-    <div id="skills" class="content">
-        <h2>Какие навыки вы можете предложить?</h2>
-        <input type="text" id="skillsInput" placeholder="Например: дизайн, программирование">
-        <button class="button" id="nextStep">Далее</button>
+    <div class="container hidden" id="skills">
+        <h2>What skills can you offer?</h2>
+        <input type="text" class="input-field" id="skillsInput" placeholder="e.g., Design, Programming">
+        <button class="button" id="skillsNext">Next</button>
     </div>
 
-    <div id="needs" class="content">
-        <h2>Какие навыки или услуги вам нужны?</h2>
-        <input type="text" id="needsInput" placeholder="Например: уроки английского">
-        <button class="button" id="finishRegistration">Завершить регистрацию</button>
+    <div class="container hidden" id="needs">
+        <h2>What skills do you need?</h2>
+        <input type="text" class="input-field" id="needsInput" placeholder="e.g., Language lessons">
+        <button class="button" id="finishRegistration">Finish</button>
     </div>
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <footer>
+        <div class="footer-nav">
+            <button id="home">Home</button>
+            <button id="profile">Profile</button>
+            <button id="exchange">Exchange</button>
+        </div>
+    </footer>
+
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.initData();
-
-        const startSection = document.getElementById('start');
-        const skillsSection = document.getElementById('skills');
-        const needsSection = document.getElementById('needs');
-
-        document.getElementById('registerSkills').onclick = () => {
-            startSection.classList.remove('visible');
-            skillsSection.classList.add('visible');
+        document.getElementById("startButton").onclick = () => {
+            document.getElementById("start").classList.add("hidden");
+            document.getElementById("skills").classList.remove("hidden");
         };
 
-        document.getElementById('nextStep').onclick = () => {
-            const skills = document.getElementById('skillsInput').value;
-            // Отправка данных в backend
-            fetch('/set-skills', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ skills })
-            }).then(response => response.json()).then(data => {
-                skillsSection.classList.remove('visible');
-                needsSection.classList.add('visible');
-            });
+        document.getElementById("skillsNext").onclick = () => {
+            document.getElementById("skills").classList.add("hidden");
+            document.getElementById("needs").classList.remove("hidden");
         };
 
-        document.getElementById('finishRegistration').onclick = () => {
-            const needs = document.getElementById('needsInput').value;
-            // Отправка данных в backend
-            fetch('/set-needs', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ needs })
-            }).then(response => response.json()).then(data => {
-                tg.close();
-            });
+        document.getElementById("finishRegistration").onclick = () => {
+            alert("Registration complete! Thank you for joining Skill Exchange.");
+            document.getElementById("needs").classList.add("hidden");
+            document.getElementById("start").classList.remove("hidden");
         };
     </script>
-
 </body>
 </html>
